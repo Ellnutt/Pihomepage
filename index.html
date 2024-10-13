@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Home Server</title>
+    <link rel="icon" href="path/to/your/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="path/to/your/apple-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0d0d0d;
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            margin-bottom: 20px;
+            width: 80%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        h1,
+        h2 {
+            color: #00ff00;
+            position: relative;
+            animation: glitch 1.5s infinite;
+        }
+        
+        p,
+        a {
+            color: #00ff00;
+        }
+        
+        .status-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .device-list,
+        .activity-log {
+            text-align: left;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            background-color: #2a2a2a;
+        }
+        
+        .device,
+        .activity {
+            margin-bottom: 5px;
+        }
+        
+        .online {
+            color: #00ff00;
+        }
+        
+        .offline {
+            color: #ff0000;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 data-text="Welcome to My Home Server">Welcome to My Home Server</h1>
+
+    <h1> Dashboard</h1>
+
+    <div class="container search-container">
+        <input type="text" id="google-search" placeholder="Google Search">
+        <button onclick="googleSearch()">Search</button>
+    </div>
+
+    <div class="container" id="cyber-news">
+        <h2>Latest Cyber News</h2>
+        <div id="news-container">Loading news...</div>
+    </div>
+    <div class="container activity-log">
+        <h2>Recent Activity Log</h2>
+        <div class="activity">User logged in from 192.168.1.10</div>
+        <div class="activity">Backup completed successfully</div>
+        <div class="activity">New device connected: Device 4 (192.168.1.5)</div>
+        <div class="activity">System update started</div>
+    </div>
+
+    <div class="container" id="network-status">
+        <h2>Network Status</h2>
+        <div class="status-indicator">
+            <p>Router: <span id="router-status" class="online">Online</span></p>
+        </div>
+        <div class="device-list" id="device-list">
+            <h3>Connected Devices</h3>
+            <div class="device online">Device 1 (192.168.1.2)</div>
+            <div class="device offline">Device 2 (192.168.1.3)</div>
+            <div class="device online">Device 3 (192.168.1.4)</div>
+        </div>
+    </div>
+
+    <div class="container" id="location-info">
+        <h2>Your IP</h2>
+        <p>IP Address: <span id="ip-address">Loading...</span></p>
+        <p>Geo-Location: <span id="geo-location">Loading...</span></p>
+    </div>
+
+
+
+    <div class="container time-zone">
+        <h2>World Time Zones</h2>
+        <p>
+            <i class="fas fa-clock"></i> New York: <span id="new-york-time">Loading...</span>
+        </p>
+        <p>
+            <i class="fas fa-clock"></i> London: <span id="london-time">Loading...</span>
+        </p>
+        <p>
+            <i class="fas fa-clock"></i> Tokyo: <span id="tokyo-time">Loading...</span>
+        </p>
+        <p>
+            <i class="fas fa-clock"></i> Sao Paulo: <span id="sao-paulo-time">Loading...</span>
+        </p>
+    </div>
+
+    <div class="container" id="system-stats">
+        <h2>System Monitoring</h2>
+        <p>
+            <i class="fas fa-microchip"></i> CPU Usage: <span id="cpu-usage">Loading...</span>%
+        </p>
+        <p>
+            <i class="fas fa-memory"></i> Memory Usage: <span id="memory-usage">Loading...</span>%
+        </p>
+        <p>
+            <i class="fas fa-hdd"></i> Disk Usage: <span id="disk-usage">Loading...</span>%
+        </p>
+    </div>
+
+    <div class="container" id="speed-test-container">
+        <h2>Internet Speed Test</h2>
+        <iframe src="https://openspeedtest.com/Get-widget.php" width="600" height="300" frameborder="0"></iframe>
+    </div>
+
+
+
+    <script>
+        // Fetch IP Address and Geo-Location
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ip-address').textContent = data.ip;
+                document.getElementById('geo-location').textContent = data.city + ', ' + data.region + ', ' + data.country_name;
+            });
+
+        // Fetch Cyber News
+        const apiKey = '#register your own PLACE HEAR##';
+
+        fetch(`https://gnews.io/api/v4/search?q=cybersecurity&token=${apiKey}`)
+            .then(response => response.json())
+            .then(data => {
+                const newsContainer = document.getElementById('news-container');
+                newsContainer.innerHTML = '';
+
+                if (data.articles && data.articles.length > 0) {
+                    data.articles.forEach(item => {
+                        const newsItem = document.createElement('div');
+                        newsItem.classList.add('news-item');
+                        newsItem.innerHTML = `
+                            <strong>${item.title}</strong><br>
+                            <a href="${item.url}" target="_blank">${item.url}</a><br>
+                            ${item.description || 'No description available.'}
+                        `;
+                        newsContainer.appendChild(newsItem);
+                    });
+                } else {
+                    newsContainer.innerHTML = 'No news found.';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching news:', error);
+                const newsContainer = document.getElementById('news-container');
+                newsContainer.innerHTML = 'Error fetching news.';
+            });
+
+        // Google Search Function
+        function googleSearch() {
+            const query = document.getElementById('google-search').value;
+            window.open('https://www.google.com/search?q=' + query, '_blank');
+        }
+
+        // Update Time Zones
+        function updateTimeZones() {
+            const now = new Date();
+            document.getElementById('new-york-time').textContent = now.toLocaleTimeString('en-US', {
+                timeZone: 'America/New_York'
+            });
+            document.getElementById('london-time').textContent = now.toLocaleTimeString('en-GB', {
+                timeZone: 'Europe/London'
+            });
+            document.getElementById('tokyo-time').textContent = now.toLocaleTimeString('ja-JP', {
+                timeZone: 'Asia/Tokyo'
+            });
+            document.getElementById('sao-paulo-time').textContent = now.toLocaleTimeString('pt-BR', {
+                timeZone: 'America/Sao_Paulo'
+            });
+        }
+
+        setInterval(updateTimeZones, 1000);
+        updateTimeZones();
+
+        // Fetch System Stats
+        function fetchSystemStats() {
+            fetch('/system-stats')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('cpu-usage').textContent = data.cpu;
+                    document.getElementById('memory-usage').textContent = data.memory;
+                    document.getElementById('disk-usage').textContent = data.disk;
+                });
+        }
+
+        setInterval(fetchSystemStats, 5000); // Update every 5 seconds
+    </script>
+</body>
+
+</html>
